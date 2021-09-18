@@ -8,6 +8,7 @@ const ItemSchema = new Schema<IItemSchemaDTO>({
     user: UserSchema,
     title: { type: String, required: true },
     description: { type: String, required: true },
+    helpers: [UserSchema],
     status: {
         type: String,
         enum: Object.values(ItemStatusEnum),

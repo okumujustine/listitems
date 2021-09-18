@@ -1,9 +1,10 @@
 import { IUserSchema } from "./IItemSchemaDTO";
 
 export interface IItemDTO {
+    _id?: string,
     userId: string,
-    user:IUserSchema,
+    user: IUserSchema,
     title: string,
-    description:string,
+    description: string,
     status?: string,
 }

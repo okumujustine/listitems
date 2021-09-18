@@ -15,14 +15,28 @@ class ItemRepository implements IItemRepository {
     return item
   }
 
-  public async findItemsById(userId: string): Promise<IItemDTO[]> {
+  public async findItemsByUserId(userId: string): Promise<IItemDTO[]> {
     const items = await this.itemMongooseInstance.find({ userId }).sort({ createdAt: -1 })
     return items
+  }
+
+  public async findItemById(itemId: string): Promise<IItemDTO> {
+    const item = await this.itemMongooseInstance.findOne({ _id: itemId }).sort({ createdAt: -1 })
+    return item
   }
 
   public async findItemsByStatus(status: ItemStatusEnum): Promise<IItemDTO[]> {
     const items = await this.itemMongooseInstance.find({ status: status }).sort({ createdAt: -1 })
     return items
+  }
+
+  public async updateItemStatus({ id, status }: { id: string, status: ItemStatusEnum }): Promise<IItemDTO> {
+    const item = await this.itemMongooseInstance.updateOne(
+      { _id: id },
+      { $set: { status: status } }
+    )
+
+    return item
   }
 
   public async findPrivateAndPublicItems(userId: string): Promise<IItemDTO[]> {
@@ -35,7 +49,8 @@ class ItemRepository implements IItemRepository {
           ]
         },
         { status: ItemStatusEnum.global },
-        { status: ItemStatusEnum.public }
+        { status: ItemStatusEnum.public },
+        { "helpers.useId": userId }
       ]
     }).sort({ createdAt: -1 })
 

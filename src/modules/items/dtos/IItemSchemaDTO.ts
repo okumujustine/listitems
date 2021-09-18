@@ -11,5 +11,5 @@ export interface IItemSchemaDTO {
     title: string,
     description: string,
     status: string,
-    // timestamps: true
+    helpers: IUserSchema[]
 }

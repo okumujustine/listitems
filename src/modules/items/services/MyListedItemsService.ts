@@ -7,10 +7,10 @@ class MyListedItemsService {
     constructor(
         @inject('ItemRepository')
         private itemRepository: IItemRepository,
-    ){}
+    ) { }
 
-    public async execute(userId:string) {
-        const item = await this.itemRepository.findItemsById(userId)
+    public async execute(userId: string) {
+        const item = await this.itemRepository.findItemById(userId)
         return item
     }
 }
