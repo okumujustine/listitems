@@ -21,7 +21,8 @@ class ItemRepository implements IItemRepository {
   }
 
   public async findItemById(itemId: string): Promise<IItemDTO> {
-    const item = await this.itemMongooseInstance.findOne({ _id: itemId }).sort({ createdAt: -1 })
+
+    const item = await this.itemMongooseInstance.findOne({ id: itemId }).sort({ createdAt: -1 })
     return item
   }
 
@@ -39,7 +40,31 @@ class ItemRepository implements IItemRepository {
     return item
   }
 
+  public async checkIfUserIsaHelper({ userId, itemId }: { userId: string, itemId: string }): Promise<IItemDTO> {
+    const item = await this.itemMongooseInstance.findOne({
+      $and: [
+        { _id: itemId },
+        { "helpers.useId": userId }
+      ]
+    })
+
+    return item
+  }
+
+  public async addItemHelper({ itemId, helper }: any): Promise<any> {
+
+    const addItemHelper = await this.itemMongooseInstance.updateOne(
+      { _id: itemId },
+      { $push: { helpers: helper } }
+    )
+
+    //update notification status to approved, send itemId and helperId to the notification service
+
+    return addItemHelper
+  }
+
   public async findPrivateAndPublicItems(userId: string): Promise<IItemDTO[]> {
+
     const items = await this.itemMongooseInstance.find({
       $or: [
         {

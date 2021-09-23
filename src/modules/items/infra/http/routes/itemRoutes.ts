@@ -5,6 +5,7 @@ import { CreateItemController } from "../controllers/CreateItemController"
 import { MyListedItemsController } from "../controllers/MyListedItemsController"
 import { ListedItemsController } from "../controllers/ListedItemsController"
 import { UpdateItemStatusController } from "../controllers/UpdateItemStatusController"
+import { DocumentHelperController } from "../controllers/DocumentHelperController"
 
 const itemRoutes = Router()
 
@@ -13,6 +14,7 @@ const createItemController = new CreateItemController()
 const myListedItemsController = new MyListedItemsController()
 const listedItemsController = new ListedItemsController()
 const updateItemStatusController = new UpdateItemStatusController()
+const documentHelperController = new DocumentHelperController()
 
 
 itemRoutes.get(
@@ -34,8 +36,6 @@ itemRoutes.get(
     myListedItemsController.items
 )
 
-
-
 itemRoutes.get(
     '/my_listed_items',
     isAuthenticated.currentUser,
@@ -45,6 +45,20 @@ itemRoutes.get(
 
 itemRoutes.post(
     '/update_my_item_status',
+    isAuthenticated.currentUser,
+    requireAuth,
+    updateItemStatusController.update
+)
+
+itemRoutes.post(
+    '/add_document_helper',
+    isAuthenticated.currentUser,
+    requireAuth,
+    documentHelperController.addHelper
+)
+
+itemRoutes.post(
+    '/check_user_already_document_helper',
     isAuthenticated.currentUser,
     requireAuth,
     updateItemStatusController.update

@@ -8,4 +8,6 @@ export default interface IItemRepository {
     findItemsByStatus(status: ItemStatusEnum): Promise<IItemDTO[]>;
     findPrivateAndPublicItems(userId: string): Promise<IItemDTO[]>;
     updateItemStatus(IdAndStatus: { id: string | undefined, status: ItemStatusEnum }): Promise<IItemDTO>;
+    checkIfUserIsaHelper({ userId, itemId }: { userId: string, itemId: string }): Promise<IItemDTO>;
+    addItemHelper({ itemId, helper }: any): Promise<any>;
 }
