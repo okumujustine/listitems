@@ -6,6 +6,7 @@ import { MyListedItemsController } from "../controllers/MyListedItemsController"
 import { ListedItemsController } from "../controllers/ListedItemsController"
 import { UpdateItemStatusController } from "../controllers/UpdateItemStatusController"
 import { DocumentHelperController } from "../controllers/DocumentHelperController"
+import { DocumentSearchController } from "../controllers/DocumentSearchController"
 
 const itemRoutes = Router()
 
@@ -15,6 +16,7 @@ const myListedItemsController = new MyListedItemsController()
 const listedItemsController = new ListedItemsController()
 const updateItemStatusController = new UpdateItemStatusController()
 const documentHelperController = new DocumentHelperController()
+const documentSearchController = new DocumentSearchController()
 
 
 itemRoutes.get(
@@ -55,6 +57,18 @@ itemRoutes.post(
     isAuthenticated.currentUser,
     requireAuth,
     documentHelperController.addHelper
+)
+
+itemRoutes.post(
+    '/item_search_without_log_in',
+    documentSearchController.notLoggedInSearch
+)
+
+itemRoutes.post(
+    '/item_search_when_logged_in',
+    isAuthenticated.currentUser,
+    requireAuth,
+    documentSearchController.loggedInSearch
 )
 
 itemRoutes.post(

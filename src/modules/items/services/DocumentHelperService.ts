@@ -41,11 +41,6 @@ class DocumentHelperService {
             throw new AppError("Failed to add item helper, try again later")
         }
     }
-
-    // public async execute(itemData: IItemDTO): Promise<any> {
-    //     const item = await this.itemRepository.create(itemData)
-    //     return item
-    // }
 }
 
 export { DocumentHelperService }

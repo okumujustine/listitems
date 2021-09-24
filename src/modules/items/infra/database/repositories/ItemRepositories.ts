@@ -22,7 +22,7 @@ class ItemRepository implements IItemRepository {
 
   public async findItemById(itemId: string): Promise<IItemDTO> {
 
-    const item = await this.itemMongooseInstance.findOne({ id: itemId }).sort({ createdAt: -1 })
+    const item = await this.itemMongooseInstance.findById(itemId)
     return item
   }
 
@@ -34,7 +34,8 @@ class ItemRepository implements IItemRepository {
   public async updateItemStatus({ id, status }: { id: string, status: ItemStatusEnum }): Promise<IItemDTO> {
     const item = await this.itemMongooseInstance.updateOne(
       { _id: id },
-      { $set: { status: status } }
+      { $set: { status: status } },
+      { runValidators: true }
     )
 
     return item
@@ -58,8 +59,6 @@ class ItemRepository implements IItemRepository {
       { $push: { helpers: helper } }
     )
 
-    //update notification status to approved, send itemId and helperId to the notification service
-
     return addItemHelper
   }
 
@@ -80,6 +79,64 @@ class ItemRepository implements IItemRepository {
     }).sort({ createdAt: -1 })
 
     return items
+  }
+
+  public async findPrivateAndPublicItemsWithSearchQuery({ userId, query }: { userId: string, query: string }): Promise<IItemDTO[]> {
+
+    const finalQuery = new RegExp(query, 'i')
+
+    const items = await this.itemMongooseInstance.find({
+      $and: [
+        {
+          $or: [
+            {
+              $and: [
+                { userId: userId },
+                { status: ItemStatusEnum.private }
+              ]
+            },
+            { status: ItemStatusEnum.global },
+            { status: ItemStatusEnum.public },
+            { "helpers.useId": userId }
+          ]
+        },
+        {
+          $or: [
+            { title: { $regex: finalQuery } },
+            { description: { $regex: finalQuery } }
+          ]
+        }
+      ]
+
+    }).sort({ createdAt: -1 })
+
+    return items
+  }
+
+  public async findGlobalItemsWithSearchQuery(query: string): Promise<IItemDTO[]> {
+
+    let queryParams
+    const finalQuery = new RegExp(query, 'i')
+
+    if (query) {
+      queryParams = {
+        $and: [
+          { status: ItemStatusEnum.global },
+          {
+            $or: [
+              { title: { $regex: finalQuery } },
+              { description: { $regex: finalQuery } }
+            ]
+          }
+        ]
+      }
+    } else {
+      queryParams = { status: ItemStatusEnum.global }
+    }
+
+    const items = await this.itemMongooseInstance.find(queryParams).sort({ createdAt: -1 })
+
+    return items;
   }
 
 

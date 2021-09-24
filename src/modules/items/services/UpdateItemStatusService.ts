@@ -25,6 +25,9 @@ class UpdateItemStatusService {
         }
 
         const item = await this.itemRepository.findItemById(itemId);
+        console.log({
+            itemId
+        })
 
         if (!item) {
             throw new AppError("item doesn't exist");
