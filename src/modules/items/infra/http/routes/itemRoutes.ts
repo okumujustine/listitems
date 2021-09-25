@@ -7,6 +7,7 @@ import { ListedItemsController } from "../controllers/ListedItemsController"
 import { UpdateItemStatusController } from "../controllers/UpdateItemStatusController"
 import { DocumentHelperController } from "../controllers/DocumentHelperController"
 import { DocumentSearchController } from "../controllers/DocumentSearchController"
+import { RabbitMQTestController } from "../controllers/RabbitMQTestController"
 
 const itemRoutes = Router()
 
@@ -17,6 +18,7 @@ const listedItemsController = new ListedItemsController()
 const updateItemStatusController = new UpdateItemStatusController()
 const documentHelperController = new DocumentHelperController()
 const documentSearchController = new DocumentSearchController()
+const rabbitMQTestController = new RabbitMQTestController()
 
 
 itemRoutes.get(
@@ -69,6 +71,11 @@ itemRoutes.post(
     isAuthenticated.currentUser,
     requireAuth,
     documentSearchController.loggedInSearch
+)
+
+itemRoutes.post(
+    '/rabbit',
+    rabbitMQTestController.test
 )
 
 itemRoutes.post(

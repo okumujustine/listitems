@@ -10,6 +10,8 @@ import '@shared/infra/database';
 import '@shared/container';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
+import './rabbitmq-connection'
+
 
 const app = express();
 

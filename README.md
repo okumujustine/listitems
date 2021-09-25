@@ -5,6 +5,10 @@
 - create a database named **todolist**.
 - make sure the database server doesn't have a password or if so, then edit the connection string in the file (**shared/infra/database/index.ts**) to have the database credentials.
 
+INSTALL rabbitMQ
+```$ docker pull```
+RUN rabbitMQ 
+```$ docker run -d --name my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management ```
 ##### 1. Clone the project.
 
 ```$ git clone ```
