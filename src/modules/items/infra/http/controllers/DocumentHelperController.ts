@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { UpdateItemStatusService } from "@modules/items/services/UpdateItemStatusService";
 import AppError from "@shared/errors/AppError";
 import { DocumentHelperService } from "@modules/items/services/DocumentHelperService";
+import { rabbitMQChannelInstance } from "@shared/infra/http/rabbitmq-connection";
 
 
 export class DocumentHelperController {
@@ -10,7 +11,7 @@ export class DocumentHelperController {
 
         const documentHelperService = container.resolve(DocumentHelperService);
 
-        const { helper, itemId } = req.body;
+        const { helper, itemId, notificationId } = req.body;
 
         const currentUserId = req.currentUser?.id! as string;
 
@@ -40,14 +41,20 @@ export class DocumentHelperController {
             throw new AppError(`${helper.username} is already a helper`);
         }
 
-        const itemHelperAdded = await documentHelperService.executeAddItemHelper({
+        await documentHelperService.executeAddItemHelper({
             helper,
             itemId
         })
 
         //update the notification to approved
+        try {
 
-        return res.status(200).send({ helper: "document helper successfully addded" });
+            await rabbitMQChannelInstance.sendToQueue('notification_status_to_viewed', Buffer.from(JSON.stringify({ id: notificationId })));
+            return res.status(200).send({ helper: "document helper successfully addded" });
+
+        } catch (err) {
+            return res.status(200).send({ helper: "document helper successfully addded, notification status will propagate later" });
+        }
 
     }
 }

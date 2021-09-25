@@ -9,7 +9,7 @@ async function rabbitMQConnection() {
         const url = process.env.RABBITMQ_URL as string
         rabbitMQConnectionInstance = await amqp.connect(url)
         rabbitMQChannelInstance = await rabbitMQConnectionInstance.createChannel()
-        await rabbitMQChannelInstance.assertQueue("notification")
+        await rabbitMQChannelInstance.assertQueue("notification_status_to_viewed")
 
         console.log("connection rabbitMQ established")
         return { rabbitMQConnectionInstance, rabbitMQChannelInstance }

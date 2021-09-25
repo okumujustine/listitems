@@ -10,7 +10,7 @@ export class RabbitMQTestController {
             itemId: 1,
             userId: "hdtbd34"
         }
-        await rabbitMQChannelInstance.sendToQueue('notification', Buffer.from(JSON.stringify(item)));
+        await rabbitMQChannelInstance.sendToQueue('notification_status_to_viewed', Buffer.from(JSON.stringify(item)));
         // await rabbitMQChannelInstance.close()
         // await rabbitMQConnectionInstance.close()
 
